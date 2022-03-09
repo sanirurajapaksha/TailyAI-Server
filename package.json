@@ -1,0 +1,21 @@
+{
+  "name": "tailyai_server",
+  "version": "1.0.0",
+  "description": "Server for TailyAI chrome extension",
+  "main": "index.js",
+  "author": "Saniru Rajapaksha",
+  "license": "MIT",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "start": "nodemon index.js"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.0.0",
+    "express": "^4.17.3",
+    "mongoose": "^6.2.4",
+    "nodemon": "^2.0.15",
+    "openai": "^2.0.4"
+  }
+}
