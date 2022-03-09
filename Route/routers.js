@@ -12,6 +12,7 @@ const openai = new OpenAIApi(configuration);
 router.post("/api/v1/openai", async (req, res) => {
   const data = req.body;
   try {
+    console.log("started to generate AI Completion");
     const response = await openai.createCompletion("text-davinci-001", {
       prompt: `Generate an Email to send according to the given context\n\nGiven context: ${data}\nGenerated Email:`,
       temperature: 1,
@@ -21,6 +22,7 @@ router.post("/api/v1/openai", async (req, res) => {
       presence_penalty: 0,
     });
     console.log(response);
+    console.log("successfully Generated AI Completion");
   } catch (error) {
     console.log("error while generating AI Completion --> " + error);
   }
