@@ -6,8 +6,8 @@ import router from "./Route/routers.js";
 const app = express();
 dotenv.config();
 
-app.use(express.json({ limit: "200mb", extend: true }));
-app.use(express.urlencoded({ limit: "200mb", extended: true }));
+app.use(express.json({ extend: true }));
+app.use(express.urlencoded({ extended: true }));
 app.use(cors());
 
 app.use("/", router);

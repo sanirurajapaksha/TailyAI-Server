@@ -1,20 +1,22 @@
 import exress from "express";
+import dotenv from "dotenv";
 import { Configuration, OpenAIApi } from "openai";
 
 const router = exress.Router();
+dotenv.config();
 
 const configuration = new Configuration({
-  apiKey: "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",
+  apiKey: process.env.OPENAI_API_KEY,
 });
 
 const openai = new OpenAIApi(configuration);
 
 router.post("/api/v1/openai", async (req, res) => {
-  const data = req.body;
+  const data = req.body.text;
   try {
     console.log("started to generate AI Completion");
     const response = await openai.createCompletion("text-davinci-001", {
-      prompt: `Generate an Email to send according to the given context\n\nGiven context: ${data}\nGenerated Email:`,
+      prompt: `Generate an Email to send from sender to receiver according to the given context\n\nGiven context: ${data}\nGenerated Email:`,
       temperature: 1,
       max_tokens: 250,
       top_p: 1,
