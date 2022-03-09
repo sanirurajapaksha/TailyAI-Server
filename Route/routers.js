@@ -21,7 +21,9 @@ router.post("/api/v1/openai", async (req, res) => {
       presence_penalty: 0,
     });
     console.log(response);
-  } catch (error) {}
+  } catch (error) {
+    console.log("error while generating AI Completion --> " + error);
+  }
 });
 
 export default router;
