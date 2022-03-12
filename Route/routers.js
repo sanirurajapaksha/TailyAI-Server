@@ -24,7 +24,6 @@ router.post("/api/v1/openai", async (req, res) => {
       presence_penalty: 0,
     });
     res.send(response.data.choices[0].text);
-    console.log("successfully Generated AI Completion");
   } catch (error) {
     console.log("error while generating AI Completion --> " + error);
   }
