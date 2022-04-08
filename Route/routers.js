@@ -1,6 +1,8 @@
 import express from "express";
 import dotenv from "dotenv";
 import { Configuration, OpenAIApi } from "openai";
+import { db, auth } from "../Firebase/initialize.js";
+import { doc, setDoc, getDoc } from "firebase/firestore";
 
 const router = express.Router();
 dotenv.config();
@@ -65,4 +67,30 @@ router.post("/api/v1/openai", async (req, res) => {
   }
 });
 
+router.post("/api/v1/paddle", async (req, res) => {
+  try {
+    if (req.body.alert_name === "subscription_created")
+      getDoc(doc(db, "users", auth.currentUser.uid))
+        .then((docSnap) => {
+          if (docSnap.exists()) {
+            if (docSnap.data().email === req.body.email) {
+              console.log("Email is already in use");
+            }
+          }
+        })
+        .catch((error) => {
+          console.log("Error getting document:", error);
+        });
+  } catch (error) {
+    console.log("" + error);
+  }
+});
+
+router.get("/", async (req, res) => {
+  try {
+    res.send(auth);
+  } catch (error) {
+    console.log("" + error);
+  }
+});
 export default router;
