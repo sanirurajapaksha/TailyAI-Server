@@ -73,18 +73,15 @@ router.post("/api/v1/openai", async (req, res) => {
 
 router.post("/api/v1/paddle/webhooks", async (req, res) => {
   try {
-    if (req.body.alert_name === "subscription_created")
-      getDoc(doc(db, "users", cache_base.get("auth_uid")))
-        .then((docSnap) => {
-          if (docSnap.exists()) {
-            if (docSnap.data().email === req.body.email) {
-              console.log("Both matches");
-            }
-          }
-        })
-        .catch((error) => {
-          console.log("Error getting document:", error);
-        });
+    if (req.body.alert_name === "subscription_created") {
+      const snapshot = db.collection("users").doc(cache.get("auth_uid"));
+      const doc = await snapshot.get();
+      if (doc.exists) {
+        if (doc.data().email === req.body.email) {
+          console.log("Both emails matches");
+        }
+      }
+    }
   } catch (error) {
     console.log("" + error);
   }
