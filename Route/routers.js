@@ -3,9 +3,11 @@ import dotenv from "dotenv";
 import { Configuration, OpenAIApi } from "openai";
 import { db } from "../Firebase/initialize.js";
 import { doc, setDoc, getDoc } from "firebase/firestore";
+import { Cache } from "memory-cache";
 
 const router = express.Router();
 dotenv.config();
+// const cache_base = new NodeCache({ stdTTL: 0 });
 
 const configuration = new Configuration({
   apiKey: process.env.OPENAI_API_KEY,
@@ -67,10 +69,10 @@ router.post("/api/v1/openai", async (req, res) => {
   }
 });
 
-router.post("/api/v1/paddle", async (req, res) => {
+router.post("/api/v1/paddle/webhooks", async (req, res) => {
   try {
     if (req.body.alert_name === "subscription_created")
-      getDoc(doc(db, "users", auth.currentUser.uid))
+      getDoc(doc(db, "users", cache_base.get("auth_uid")))
         .then((docSnap) => {
           if (docSnap.exists()) {
             if (docSnap.data().email === req.body.email) {
@@ -88,7 +90,16 @@ router.post("/api/v1/paddle", async (req, res) => {
 
 router.post("/api/v1/firebase/auth", async (req, res) => {
   try {
-    console.log(req.body);
+    console.log(req.body.uid);
+    if (
+      (Cache.get("auth_uid") !== null) |
+      (Cache.get("auth_uid") !== undefined)
+    ) {
+      console.log("auth_uid already set in cache");
+    } else {
+      Cache.put("auth_uid", req.body.uid);
+      console.log("auth_uid set: " + Cache.get("auth_uid"));
+    }
   } catch (error) {
     console.log("" + error);
   }
