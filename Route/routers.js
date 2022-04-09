@@ -73,7 +73,7 @@ router.post("/api/v1/openai", async (req, res) => {
 router.post("/api/v1/paddle/webhooks", async (req, res) => {
   try {
     if (req.body.alert_name === "subscription_created") {
-      const snapshot = db.collection("users").doc(cache.get("auth_uid"));
+      const snapshot = db.collection("users").doc(cache.get(req.body.email));
       const doc = await snapshot.get();
       if (doc.exists) {
         if (doc.data().email === req.body.email) {
@@ -88,11 +88,13 @@ router.post("/api/v1/paddle/webhooks", async (req, res) => {
 
 router.post("/api/v1/firebase/auth", async (req, res) => {
   try {
-    if (cache.get("auth_uid") !== null) {
-      console.log("auth_uid already set in cache: " + cache.get("auth_uid"));
+    if (cache.get(req.body.email) !== null) {
+      console.log(
+        "auth_uid already set in cache: " + cache.get(req.body.email)
+      );
     } else {
-      cache.put("auth_uid", req.body.uid);
-      console.log("auth_uid set: " + cache.get("auth_uid"));
+      cache.put(req.body.email, req.body.uid);
+      console.log("auth_uid set: " + cache.get(req.body.email));
     }
   } catch (error) {
     console.log("" + error);
