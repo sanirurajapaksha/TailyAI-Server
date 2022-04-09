@@ -2,7 +2,6 @@ import express from "express";
 import dotenv from "dotenv";
 import { Configuration, OpenAIApi } from "openai";
 import { db } from "../Firebase/initialize.js";
-import { doc, setDoc, getDoc } from "firebase/firestore";
 import { createRequire } from "module";
 
 const require = createRequire(import.meta.url);
