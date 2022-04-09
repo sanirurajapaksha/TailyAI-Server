@@ -10,7 +10,6 @@ const cache = require("memory-cache");
 
 const router = express.Router();
 dotenv.config();
-// const cache_base = new NodeCache({ stdTTL: 0 });
 
 const configuration = new Configuration({
   apiKey: process.env.OPENAI_API_KEY,
