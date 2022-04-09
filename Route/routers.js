@@ -1,7 +1,7 @@
 import express from "express";
 import dotenv from "dotenv";
 import { Configuration, OpenAIApi } from "openai";
-import { db, auth } from "../Firebase/initialize.js";
+import { db } from "../Firebase/initialize.js";
 import { doc, setDoc, getDoc } from "firebase/firestore";
 
 const router = express.Router();
@@ -74,13 +74,21 @@ router.post("/api/v1/paddle", async (req, res) => {
         .then((docSnap) => {
           if (docSnap.exists()) {
             if (docSnap.data().email === req.body.email) {
-              console.log("Email is already in use");
+              console.log("Both matches");
             }
           }
         })
         .catch((error) => {
           console.log("Error getting document:", error);
         });
+  } catch (error) {
+    console.log("" + error);
+  }
+});
+
+router.post("/api/v1/firebase/auth", async (req, res) => {
+  try {
+    console.log(req.body);
   } catch (error) {
     console.log("" + error);
   }
@@ -93,4 +101,5 @@ router.get("/", async (req, res) => {
     console.log("" + error);
   }
 });
+
 export default router;
