@@ -3,7 +3,10 @@ import dotenv from "dotenv";
 import { Configuration, OpenAIApi } from "openai";
 import { db } from "../Firebase/initialize.js";
 import { doc, setDoc, getDoc } from "firebase/firestore";
-import { Cache } from "memory-cache";
+import { createRequire } from "module";
+
+const require = createRequire(import.meta.url);
+const cache = require("memory-cache");
 
 const router = express.Router();
 dotenv.config();
@@ -91,14 +94,11 @@ router.post("/api/v1/paddle/webhooks", async (req, res) => {
 router.post("/api/v1/firebase/auth", async (req, res) => {
   try {
     console.log(req.body.uid);
-    if (
-      (Cache.get("auth_uid") !== null) |
-      (Cache.get("auth_uid") !== undefined)
-    ) {
-      console.log("auth_uid already set in cache");
+    if (cache.get("auth_uid") !== null) {
+      console.log("auth_uid already set in cache: " + cache.get("auth_uid"));
     } else {
-      Cache.put("auth_uid", req.body.uid);
-      console.log("auth_uid set: " + Cache.get("auth_uid"));
+      cache.put("auth_uid", req.body.uid);
+      console.log("auth_uid set: " + cache.get("auth_uid"));
     }
   } catch (error) {
     console.log("" + error);
