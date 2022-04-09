@@ -92,7 +92,6 @@ router.post("/api/v1/paddle/webhooks", async (req, res) => {
 
 router.post("/api/v1/firebase/auth", async (req, res) => {
   try {
-    console.log(req.body.uid);
     if (cache.get("auth_uid") !== null) {
       console.log("auth_uid already set in cache: " + cache.get("auth_uid"));
     } else {
