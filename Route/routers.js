@@ -75,32 +75,36 @@ router.post("/api/v1/paddle/webhooks", async (req, res) => {
     if (req.body !== null) {
       res.status(200);
     }
+
+    const snapshot = db.collection("users").doc(cache.get(req.body.email));
+    const doc = await snapshot.get();
+
     if (req.body.alert_name === "subscription_created") {
-      const snapshot = db.collection("users").doc(cache.get(req.body.email));
-      const doc = await snapshot.get();
       if (doc.exists) {
         if (doc.data().email === req.body.email) {
-          console.log("Both emails matches");
+          console.log("Both emails matches - payment created");
         } else {
-          console.log("Emails do not match");
+          console.log("Emails do not match - payment created");
         }
       }
     }
+
     if (req.body.alert_name === "subscription_payment_succeeded") {
-      const snapshot = db.collection("users").doc(cache.get(req.body.email));
-      const doc = await snapshot.get();
       if (doc.exists) {
         if (doc.data().email === req.body.email) {
-          console.log("Both emails matches");
+          console.log("Both emails matches - payment succeeded");
         } else {
-          console.log("Emails do not match");
+          console.log("Emails do not match - payment succeeded");
         }
       }
     }
+
     if (req.body.alert_name === "subscription_updated") {
     }
+
     if (req.body.alert_name === "subscription_cancelled") {
     }
+
     if (req.body.alert_name === "subscription_payment_failed") {
     }
   } catch (error) {
