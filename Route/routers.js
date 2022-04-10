@@ -97,6 +97,12 @@ router.post("/api/v1/paddle/webhooks", async (req, res) => {
         }
       }
     }
+    if (req.body.alert_name === "subscription_updated") {
+    }
+    if (req.body.alert_name === "subscription_cancelled") {
+    }
+    if (req.body.alert_name === "subscription_payment_failed") {
+    }
   } catch (error) {
     console.log("" + error);
   }
