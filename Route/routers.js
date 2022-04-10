@@ -78,6 +78,8 @@ router.post("/api/v1/paddle/webhooks", async (req, res) => {
       if (doc.exists) {
         if (doc.data().email === req.body.email) {
           console.log("Both emails matches");
+        } else {
+          console.log("Emails do not match");
         }
       }
     }
