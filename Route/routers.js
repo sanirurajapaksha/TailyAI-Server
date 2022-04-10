@@ -72,7 +72,21 @@ router.post("/api/v1/openai", async (req, res) => {
 
 router.post("/api/v1/paddle/webhooks", async (req, res) => {
   try {
+    if (req.body !== null) {
+      res.status(200);
+    }
     if (req.body.alert_name === "subscription_created") {
+      const snapshot = db.collection("users").doc(cache.get(req.body.email));
+      const doc = await snapshot.get();
+      if (doc.exists) {
+        if (doc.data().email === req.body.email) {
+          console.log("Both emails matches");
+        } else {
+          console.log("Emails do not match");
+        }
+      }
+    }
+    if (req.body.alert_name === "subscription_payment_succeeded") {
       const snapshot = db.collection("users").doc(cache.get(req.body.email));
       const doc = await snapshot.get();
       if (doc.exists) {
