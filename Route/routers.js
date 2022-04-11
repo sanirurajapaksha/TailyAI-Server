@@ -103,7 +103,21 @@ router.post("/api/v1/paddle/webhooks", async (req, res) => {
     if (req.body.alert_name === "subscription_payment_succeeded") {
       if (doc.exists) {
         if (doc.data().email === req.body.email) {
+          let available_genarations;
+          switch (req.body.plan_name) {
+            case "Starter":
+              available_genarations = 500;
+              break;
+            case "Pro":
+              available_genarations = 1000;
+              break;
+            case "Enterprise":
+              available_genarations = 5000;
+              break;
+          }
+
           const new_data = {
+            available_genarations: available_genarations,
             customer_name: req.body.customer_name,
             status: req.body.status,
             plan_name: req.body.plan_name,
