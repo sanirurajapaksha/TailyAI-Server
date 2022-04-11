@@ -120,6 +120,7 @@ router.post("/api/v1/paddle/webhooks", async (req, res) => {
 
           const new_data = {
             available_genarations: available_genarations,
+            generations: 0,
             customer_name: req.body.customer_name,
             status: req.body.status,
             plan_name: req.body.plan_name,
