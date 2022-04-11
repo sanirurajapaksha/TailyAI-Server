@@ -155,6 +155,13 @@ router.post("/api/v1/paddle/webhooks", async (req, res) => {
     if (req.body.alert_name === "subscription_cancelled") {
       if (doc.exists) {
         if (doc.data().email === req.body.email) {
+          const new_data = {
+            email: doc.data().email,
+            plan_name: "Free",
+            free_generations: doc.data().free_generations,
+            free_available_generations: doc.data().free_available_generations,
+          };
+          await snapshot.set(new_data);
           console.log("Both emails matches - payment created");
         } else {
           console.log("Emails do not match - payment created");
