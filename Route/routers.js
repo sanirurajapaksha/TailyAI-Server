@@ -86,7 +86,7 @@ router.post("/api/v1/paddle/webhooks", async (req, res) => {
         } else {
           console.log("Emails do not match - payment created");
         }
-      
+      }
     }
 
     if (req.body.alert_name === "subscription_payment_succeeded") {
