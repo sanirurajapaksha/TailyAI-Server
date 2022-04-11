@@ -72,12 +72,14 @@ router.post("/api/v1/openai", async (req, res) => {
 
 router.post("/api/v1/paddle/webhooks", async (req, res) => {
   try {
-    res.json({
-      http_code: 200,
-      redirect_url: null,
-      content_type: null,
-      total_time: null,
-    });
+    if (req.body !== null) {
+      res.json({
+        http_code: 200,
+        redirect_url: null,
+        content_type: null,
+        total_time: null,
+      });
+    }
 
     const snapshot = db.collection("users").doc(cache.get(req.body.email));
     const doc = await snapshot.get();
