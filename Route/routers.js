@@ -72,9 +72,12 @@ router.post("/api/v1/openai", async (req, res) => {
 
 router.post("/api/v1/paddle/webhooks", async (req, res) => {
   try {
-    if (req.body !== null) {
-      res.status(200);
-    }
+    res.json({
+      http_code: 200,
+      redirect_url: null,
+      content_type: null,
+      total_time: null,
+    });
 
     const snapshot = db.collection("users").doc(cache.get(req.body.email));
     const doc = await snapshot.get();
@@ -86,9 +89,8 @@ router.post("/api/v1/paddle/webhooks", async (req, res) => {
             checkout_id: req.body.checkout_id,
             update_url: req.body.update_url,
             user_id: req.body.user_id,
-            p_signature: req.body.p_signature,
           };
-          await snapshot.set(new_data);
+          await snapshot.set(new_data, { merge: true });
           console.log("Data updated for subscription_created");
         } else {
           console.log("Email does not match for subscription_created");
@@ -113,7 +115,7 @@ router.post("/api/v1/paddle/webhooks", async (req, res) => {
             subscription_id: req.body.subscription_id,
             p_signature: req.body.p_signature,
           };
-          await snapshot.set(new_data);
+          await snapshot.set(new_data, { merge: true });
           console.log("Data updated for subscription_payment_succeeded");
         } else {
           console.log("Emails do not match - subscription_payment_succeeded");
