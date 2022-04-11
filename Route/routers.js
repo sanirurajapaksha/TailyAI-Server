@@ -89,10 +89,12 @@ router.post("/api/v1/paddle/webhooks", async (req, res) => {
             p_signature: req.body.p_signature,
           };
           await snapshot.set(new_data);
-          console.log("Both emails matches - payment created");
+          console.log("Data updated for subscription_created");
         } else {
-          console.log("Emails do not match - payment created");
+          console.log("Email does not match for subscription_created");
         }
+      } else {
+        console.log("Document does not exist for subscription_created");
       }
     }
 
@@ -112,10 +114,12 @@ router.post("/api/v1/paddle/webhooks", async (req, res) => {
             p_signature: req.body.p_signature,
           };
           await snapshot.set(new_data);
-          console.log("Both emails matches - payment succeeded");
+          console.log("Data updated for subscription_payment_succeeded");
         } else {
-          console.log("Emails do not match - payment succeeded");
+          console.log("Emails do not match - subscription_payment_succeeded");
         }
+      } else {
+        console.log("document does not exist - subscription_payment_succeeded");
       }
     }
 
