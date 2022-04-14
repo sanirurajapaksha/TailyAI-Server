@@ -4,7 +4,7 @@ import dotenv from "dotenv";
 import router from "./Route/routers.js";
 
 const app = express();
-dotenv.config()
+dotenv.config();
 
 app.use(express.json({ extend: true }));
 app.use(express.urlencoded({ extended: true }));
