@@ -162,9 +162,9 @@ router.post("/api/v1/paddle/webhooks", async (req, res) => {
             free_available_generations: doc.data().free_available_generations,
           };
           await snapshot.set(new_data);
-          console.log("Both emails matches - payment created");
+          console.log("Data updated for subscription_cancelled");
         } else {
-          console.log("Emails do not match - payment created");
+          console.log("Emails do not match - subscription_cancelled");
         }
       }
     }
