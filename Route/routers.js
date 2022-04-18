@@ -113,9 +113,6 @@ router.post("/api/v1/paddle/webhooks", async (req, res) => {
             case "Pro":
               available_genarations = 1000;
               break;
-            case "Enterprise":
-              available_genarations = 5000;
-              break;
           }
 
           const new_data = {
