@@ -169,6 +169,10 @@ router.post("/api/v1/paddle/webhooks", async (req, res) => {
     if (req.body.alert_name === "subscription_payment_failed") {
       if (doc.exists) {
         if (doc.data().email === req.body.email) {
+          const new_data = {
+            status: req.body.status,
+          };
+          await snapshot.set(new_data, { merge: true });
           console.log("Both emails matches - payment created");
         } else {
           console.log("Emails do not match - payment created");
@@ -182,6 +186,7 @@ router.post("/api/v1/paddle/webhooks", async (req, res) => {
 
 router.post("/api/v1/firebase/auth", async (req, res) => {
   try {
+    res.status(200);
     if (cache.get(req.body.email) !== null) {
       console.log(
         "auth_uid already set in cache: " + cache.get(req.body.email)
