@@ -146,17 +146,12 @@ router.post("/api/v1/paddle/webhooks", async (req, res) => {
             checkout_id: req.body.checkout_id,
             update_url: req.body.update_url,
             user_id: req.body.user_id,
-            available_genarations: available_genarations,
-            generations: 0,
-            customer_name: req.body.customer_name,
             status: req.body.status,
-            plan_name: req.body.plan_name,
             event_time: req.body.event_time,
             next_bill_date: req.body.next_bill_date,
-            instalments: req.body.instalments,
             marketing_consent: req.body.marketing_consent,
-            order_id: req.body.order_id,
             subscription_id: req.body.subscription_id,
+            subscription_plan_id: req.body.subscription_plan_id,
             p_signature: req.body.p_signature,
           };
           await snapshot.set(new_data, { merge: true });
@@ -229,3 +224,13 @@ router.get("/", async (req, res) => {
 });
 
 export default router;
+
+new_price;
+new_unit_price;
+old_next_bill_date;
+old_price;
+old_status;
+old_unit_price;
+paused_at;
+paused_from;
+paused_reason;
