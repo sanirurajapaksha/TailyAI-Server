@@ -170,7 +170,9 @@ router.post("/api/v1/paddle/webhooks", async (req, res) => {
       if (doc.exists) {
         if (doc.data().email === req.body.email) {
           const new_data = {
-            status: req.body.status,
+            event_time: req.body.event_time,
+            next_retry_date: req.body.next_retry_date,
+            attempt_number: req.body.attempt_number,
           };
           await snapshot.set(new_data, { merge: true });
           console.log("Both emails matches - payment created");
