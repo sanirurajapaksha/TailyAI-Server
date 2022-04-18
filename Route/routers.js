@@ -127,6 +127,7 @@ router.post("/api/v1/paddle/webhooks", async (req, res) => {
             marketing_consent: req.body.marketing_consent,
             order_id: req.body.order_id,
             subscription_id: req.body.subscription_id,
+            subscription_plan_id: req.body.subscription_plan_id,
             p_signature: req.body.p_signature,
           };
           await snapshot.set(new_data, { merge: true });
