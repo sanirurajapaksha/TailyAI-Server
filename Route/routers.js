@@ -153,6 +153,9 @@ router.post("/api/v1/paddle/webhooks", async (req, res) => {
             subscription_id: req.body.subscription_id,
             subscription_plan_id: req.body.subscription_plan_id,
             p_signature: req.body.p_signature,
+            paused_at: req.body.paused_at,
+            paused_from: req.body.paused_from,
+            paused_reason: req.body.paused_reason,
           };
           await snapshot.set(new_data, { merge: true });
           console.log("Both emails matches - payment created");
@@ -224,13 +227,3 @@ router.get("/", async (req, res) => {
 });
 
 export default router;
-
-new_price;
-new_unit_price;
-old_next_bill_date;
-old_price;
-old_status;
-old_unit_price;
-paused_at;
-paused_from;
-paused_reason;
