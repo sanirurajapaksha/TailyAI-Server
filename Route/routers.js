@@ -142,6 +142,24 @@ router.post("/api/v1/paddle/webhooks", async (req, res) => {
     if (req.body.alert_name === "subscription_updated") {
       if (doc.exists) {
         if (doc.data().email === req.body.email) {
+          const new_data = {
+            checkout_id: req.body.checkout_id,
+            update_url: req.body.update_url,
+            user_id: req.body.user_id,
+            available_genarations: available_genarations,
+            generations: 0,
+            customer_name: req.body.customer_name,
+            status: req.body.status,
+            plan_name: req.body.plan_name,
+            event_time: req.body.event_time,
+            next_bill_date: req.body.next_bill_date,
+            instalments: req.body.instalments,
+            marketing_consent: req.body.marketing_consent,
+            order_id: req.body.order_id,
+            subscription_id: req.body.subscription_id,
+            p_signature: req.body.p_signature,
+          };
+          await snapshot.set(new_data, { merge: true });
           console.log("Both emails matches - payment created");
         } else {
           console.log("Emails do not match - payment created");
