@@ -203,6 +203,43 @@ router.post("/api/v1/paddle/webhooks", async (req, res) => {
   }
 });
 
+router.post("/api/v1/upgrade/user", async (req, res) => {
+  try {
+    res.status(200);
+
+    const snapshot = db.collection("users").doc(cache.get(req.body.email));
+    const doc = await snapshot.get();
+
+    if (doc.exists) {
+      if (doc.data().email === req.body.email) {
+        fetch("https://vendors.paddle.com/api/2.0/subscription/users/update", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/x-www-form-urlencoded",
+          },
+          body: {
+            vendor_id: "5376",
+            vendor_auth_code:
+              "7780038ca410ebba02d20e3d6c71010d772eb34abb4f4cb4c8",
+            subscription_id: doc.data().subscription_id,
+            plan_id: req.body.plan_id,
+            prorate: "false",
+            bill_immediately: "true",
+          },
+        })
+          .then((response) => {
+            res.json(response);
+          })
+          .catch((err) => {
+            console.error(err);
+          });
+      }
+    }
+  } catch (error) {
+    console.log("" + error);
+  }
+});
+
 router.post("/api/v1/firebase/auth", async (req, res) => {
   try {
     res.status(200);
