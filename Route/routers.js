@@ -108,10 +108,10 @@ router.post("/api/v1/paddle/webhooks", async (req, res) => {
           let available_genarations;
           switch (req.body.plan_name) {
             case "Starter":
-              available_genarations = 500;
+              available_genarations = 100;
               break;
             case "Pro":
-              available_genarations = 1000;
+              available_genarations = 500;
               break;
           }
 
