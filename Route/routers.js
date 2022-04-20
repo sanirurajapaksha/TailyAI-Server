@@ -108,11 +108,11 @@ router.post("/api/v1/paddle/webhooks", async (req, res) => {
       if (doc.exists) {
         if (doc.data().email === req.body.email) {
           let available_genarations;
-          switch (req.body.plan_name) {
-            case "Starter":
+          switch (req.body.subscription_plan_id) {
+            case "26040":
               available_genarations = 100;
               break;
-            case "Pro":
+            case "26840":
               available_genarations = 500;
               break;
           }
@@ -161,9 +161,9 @@ router.post("/api/v1/paddle/webhooks", async (req, res) => {
             paused_reason: req.body.paused_reason,
           };
           await snapshot.set(new_data, { merge: true });
-          console.log("Both emails matches - payment created");
+          console.log("Data updated");
         } else {
-          console.log("Emails do not match - payment created");
+          console.log("Emails do not match - subscription_updated");
         }
       }
     }
@@ -205,7 +205,7 @@ router.post("/api/v1/paddle/webhooks", async (req, res) => {
   }
 });
 
-router.post("/api/v1/upgrade/user", async (req, res) => {
+router.post("/api/v1/update/user", async (req, res) => {
   try {
     const snapshot = db.collection("users").doc(cache.get(req.body.email));
     const doc = await snapshot.get();
@@ -223,14 +223,18 @@ router.post("/api/v1/upgrade/user", async (req, res) => {
               "7780038ca410ebba02d20e3d6c71010d772eb34abb4f4cb4c8", // Need to update for production
             subscription_id: subscriptionID,
             plan_id: planID,
-            prorate: "false",
+            prorate: "true",
             bill_immediately: "true",
           }),
         };
         axios
           .request(options)
           .then((response) => {
-            console.log(response.data);
+            if (response.data.success === true) {
+              res.json({ msg: "success", status: 200 });
+            } else {
+              res.json({ msg: "failed", status: 400 });
+            }
           })
           .catch((error) => {
             console.error("Server " + error);

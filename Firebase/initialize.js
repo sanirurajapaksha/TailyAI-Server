@@ -9,4 +9,7 @@ initializeApp({
   credential: cert(service),
 });
 
-export const db = getFirestore();
+const db = getFirestore();
+db.settings({ ignoreUndefinedProperties: true });
+
+export { db };
