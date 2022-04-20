@@ -3,6 +3,8 @@ import dotenv from "dotenv";
 import { Configuration, OpenAIApi } from "openai";
 import { db } from "../Firebase/initialize.js";
 import { createRequire } from "module";
+import axios from "axios";
+import { stringify } from "querystring";
 
 const require = createRequire(import.meta.url);
 const cache = require("memory-cache");
@@ -205,34 +207,36 @@ router.post("/api/v1/paddle/webhooks", async (req, res) => {
 
 router.post("/api/v1/upgrade/user", async (req, res) => {
   try {
-    res.status(200);
-
     const snapshot = db.collection("users").doc(cache.get(req.body.email));
     const doc = await snapshot.get();
 
     if (doc.exists) {
       if (doc.data().email === req.body.email) {
-        fetch("https://vendors.paddle.com/api/2.0/subscription/users/update", {
+        const planID = req.body.plan_id;
+        const subscriptionID = doc.data().subscription_id;
+        const options = {
           method: "POST",
-          headers: {
-            "Content-Type": "application/x-www-form-urlencoded",
-          },
-          body: {
-            vendor_id: "5376",
+          url: "https://vendors.paddle.com/api/2.0/subscription/users/update",
+          data: stringify({
+            vendor_id: "5376", // Need to update for production
             vendor_auth_code:
-              "7780038ca410ebba02d20e3d6c71010d772eb34abb4f4cb4c8",
-            subscription_id: doc.data().subscription_id,
-            plan_id: req.body.plan_id,
+              "7780038ca410ebba02d20e3d6c71010d772eb34abb4f4cb4c8", // Need to update for production
+            subscription_id: subscriptionID,
+            plan_id: planID,
             prorate: "false",
             bill_immediately: "true",
-          },
-        })
+          }),
+        };
+        axios
+          .request(options)
           .then((response) => {
-            res.json(response);
+            console.log(response.data);
           })
-          .catch((err) => {
-            console.error(err);
+          .catch((error) => {
+            console.error("Server " + error);
           });
+      } else {
+        console.log("Emails do not match");
       }
     }
   } catch (error) {
