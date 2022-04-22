@@ -218,7 +218,7 @@ router.post("/api/v1/update/user", async (req, res) => {
         const subscriptionID = doc.data().subscription_id;
         const options = {
           method: "POST",
-          url: "https://vendors.paddle.com/api/2.0/subscription/users/update",
+          url: "https://sandbox-vendors.paddle.com/api/2.0/subscription/users/update",
           data: stringify({
             vendor_id: "5376", // Need to update for production
             vendor_auth_code:
@@ -232,6 +232,7 @@ router.post("/api/v1/update/user", async (req, res) => {
         axios
           .request(options)
           .then((response) => {
+            console.log(response.data);
             if (response.data.success === true) {
               res.json({ msg: "success", status: 200 });
             } else {
