@@ -203,7 +203,7 @@ router.post("/api/v1/paddle/webhooks", async (req, res) => {
       }
     }
   } catch (error) {
-    console.log("" + error);
+    console.log(error);
   }
 });
 
