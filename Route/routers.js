@@ -20,6 +20,9 @@ const openai = new OpenAIApi(configuration);
 
 router.post("/api/v1/openai", async (req, res) => {
   const data = req.body.text;
+  const snapshot = db.collection("users").doc(cache.get(req.body.email));
+  const doc = await snapshot.get();
+
   const prompt = `Turn the given points into a meaningful and polite email.\n\nGiven points: ${data}\nGenerated Email:`;
   try {
     const getTheFilterResponse = async () => {
@@ -55,7 +58,34 @@ router.post("/api/v1/openai", async (req, res) => {
       .logprobs.top_logprobs[0][content_filter_value];
 
     if (content_filter_value == "0" || content_filter_value == "1") {
-      res.send((await getMainResponse()).data.choices[0].text);
+      if (
+        doc.exists &&
+        doc.data().email === req.body.email &&
+        doc.data().subscription_plan_id !== null
+      ) {
+        await snapshot
+          .set({ generations: doc.data().generations + 1 }, { merge: true })
+          .catch((error) => {
+            console.log(error);
+          });
+        res.send((await getMainResponse()).data.choices[0].text);
+      } else if (
+        doc.exists &&
+        doc.data().email === req.body.email &&
+        doc.data().subscription_plan_id === null
+      ) {
+        await snapshot
+          .set(
+            {
+              free_generations: doc.data().free_generations + 1,
+            },
+            { merge: true }
+          )
+          .catch((error) => {
+            console.log(error);
+          });
+        res.send((await getMainResponse()).data.choices[0].text);
+      }
     } else if (
       content_filter_value == "2" &&
       longprob_value < toxic_threshold
