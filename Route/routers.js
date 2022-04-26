@@ -153,13 +153,13 @@ router.post("/api/v1/paddle/webhooks", async (req, res) => {
 
           switch (req.body.subscription_plan_id) {
             case "26040":
-              available_genarations = "100";
+              available_genarations = 100;
               break;
             case "26840":
-              available_genarations = "300";
+              available_genarations = 300;
               break;
             case "27546": // These should be changed in production
-              available_genarations = "500";
+              available_genarations = 500;
           }
 
           const new_data = {
