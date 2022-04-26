@@ -138,20 +138,35 @@ router.post("/api/v1/paddle/webhooks", async (req, res) => {
       if (doc.exists) {
         if (doc.data().email === req.body.email) {
           let available_genarations;
+
+          const generate_or_not = () => {
+            const event_time = new Date(doc.data().event_time).toDateString();
+            const next_bill_date = new Date(
+              doc.data().next_bill_date
+            ).toDateString();
+            if (event_time === next_bill_date) {
+              return 0;
+            } else {
+              return doc.data().generations;
+            }
+          };
+
           switch (req.body.subscription_plan_id) {
             case "26040":
-              available_genarations = 100;
+              available_genarations = "100";
               break;
             case "26840":
-              available_genarations = 300;
+              available_genarations = "300";
               break;
-            case "27546": // These should be change in production
-              available_genarations = 500;
+            case "27546": // These should be changed in production
+              available_genarations = "500";
           }
 
           const new_data = {
             available_genarations: available_genarations,
-            generations: 0,
+            generations: `${
+              doc.data().subscription_plan_id ? generate_or_not() : 0
+            }`,
             customer_name: req.body.customer_name,
             status: req.body.status,
             plan_name: req.body.plan_name,
