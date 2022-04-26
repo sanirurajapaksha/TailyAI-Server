@@ -63,28 +63,38 @@ router.post("/api/v1/openai", async (req, res) => {
         doc.data().email === req.body.email &&
         doc.data().subscription_plan_id !== null
       ) {
-        await snapshot
-          .set({ generations: doc.data().generations + 1 }, { merge: true })
-          .catch((error) => {
-            console.log(error);
-          });
-        res.send((await getMainResponse()).data.choices[0].text);
+        if (doc.data().generations === doc.data().available_genarations) {
+          res.send("limit_reached");
+        } else {
+          await snapshot
+            .set({ generations: doc.data().generations + 1 }, { merge: true })
+            .catch((error) => {
+              console.log(error);
+            });
+          res.send((await getMainResponse()).data.choices[0].text);
+        }
       } else if (
         doc.exists &&
         doc.data().email === req.body.email &&
         doc.data().subscription_plan_id === null
       ) {
-        await snapshot
-          .set(
-            {
-              free_generations: doc.data().free_generations + 1,
-            },
-            { merge: true }
-          )
-          .catch((error) => {
-            console.log(error);
-          });
-        res.send((await getMainResponse()).data.choices[0].text);
+        if (
+          doc.data().free_generations === doc.data().free_available_genarations
+        ) {
+          res.send("limit_reached");
+        } else {
+          await snapshot
+            .set(
+              {
+                free_generations: doc.data().free_generations + 1,
+              },
+              { merge: true }
+            )
+            .catch((error) => {
+              console.log(error);
+            });
+          res.send((await getMainResponse()).data.choices[0].text);
+        }
       }
     } else if (
       content_filter_value == "2" &&
