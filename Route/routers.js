@@ -19,12 +19,13 @@ const configuration = new Configuration({
 const openai = new OpenAIApi(configuration);
 
 router.post("/api/v1/openai", async (req, res) => {
-  const data = req.body.text;
-  const snapshot = db.collection("users").doc(cache.get(req.body.email));
-  const doc = await snapshot.get();
-
-  const prompt = `Turn the given points into a meaningful, polite and formal email.\n\nGiven points: ${data}\nGenerated Email:`;
   try {
+    const data = req.body.text;
+    const snapshot = db.collection("users").doc(cache.get(req.body.email));
+    const doc = await snapshot.get();
+
+    const prompt = `Turn the given points into a meaningful, polite and formal email.\n\nGiven points: ${data}\nGenerated Email:`;
+
     const getTheFilterResponse = async () => {
       const filter_response = await openai.createCompletion(
         "content-filter-alpha",
@@ -108,7 +109,11 @@ router.post("/api/v1/openai", async (req, res) => {
       res.send("toxic");
     }
   } catch (error) {
-    console.log("" + error);
+    if (
+      error.message ===
+      `Value for argument "documentPath" is not a valid resource path. Path must be a non-empty string.`
+    )
+      res.send("cache_empty");
   }
 });
 
