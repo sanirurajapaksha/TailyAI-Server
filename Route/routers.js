@@ -346,7 +346,7 @@ router.post("/api/v1/firebase/auth", async (req, res) => {
 
 router.get("/", async (req, res) => {
   try {
-    res.send(auth);
+    res.send("hello saniru");
   } catch (error) {
     console.log("" + error);
   }
