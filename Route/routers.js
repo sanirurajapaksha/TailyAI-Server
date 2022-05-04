@@ -352,4 +352,20 @@ router.get("/", async (req, res) => {
   }
 });
 
+router.get("/api/v1/extension-data", async (req, res) => {
+  try {
+    const snapshot = db.collection("users").doc(cache.get(req.body.email));
+    const doc = await snapshot.get();
+
+    if (doc.exists) {
+      res.send({
+        generations: doc.data().generations,
+        available_genarations: doc.data().available_genarations,
+      });
+    }
+  } catch (error) {
+    console.log("" + error);
+  }
+});
+
 export default router;
