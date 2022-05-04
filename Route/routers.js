@@ -352,7 +352,7 @@ router.get("/", async (req, res) => {
   }
 });
 
-router.get("/api/v1/extension-data", async (req, res) => {
+router.post("/api/v1/extension-data", async (req, res) => {
   try {
     const snapshot = db.collection("users").doc(cache.get(req.body.email));
     const doc = await snapshot.get();
