@@ -321,23 +321,6 @@ router.post("/api/v1/firebase/auth", async (req, res) => {
     } else {
       cache.put(req.body.email, req.body.uid);
       console.log("auth_uid set: " + cache.get(req.body.email));
-
-      // const snapshot = db.collection("auth_ids").doc(req.body.email);
-
-      // const result = cache.exportJson();
-      // const json_object = JSON.parse(result);
-
-      // const formatted_json_object = {};
-
-      // for (var i in json_object) {
-      //   for (var x in json_object[i]) {
-      //     if (json_object[i][x] !== "NaN") {
-      //       formatted_json_object[i] = json_object[i][x];
-      //     }
-      //   }
-      // }
-
-      // await snapshot.set(formatted_json_object, { merge: true });
     }
   } catch (error) {
     console.log("" + error);
