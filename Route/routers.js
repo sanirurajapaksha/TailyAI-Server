@@ -155,7 +155,7 @@ router.post("/api/v1/paddle/webhooks", async (req, res) => {
           let available_genarations;
 
           const generate_or_not = () => {
-            const event_time = new Date(doc.data().event_time).toDateString();
+            const event_time = new Date(req.body.event_time).toDateString();
             const next_bill_date = new Date(
               doc.data().next_bill_date
             ).toDateString();
