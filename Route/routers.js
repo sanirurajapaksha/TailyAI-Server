@@ -278,11 +278,11 @@ router.post("/api/v1/update/user", async (req, res) => {
         const subscriptionID = doc.data().subscription_id;
         const options = {
           method: "POST",
-          url: "https://sandbox-vendors.paddle.com/api/2.0/subscription/users/update",
+          url: "https://vendors.paddle.com/api/2.0/subscription/users/update",
           data: stringify({
-            vendor_id: "5376", // Need to update for production
+            vendor_id: "141614",
             vendor_auth_code:
-              "7780038ca410ebba02d20e3d6c71010d772eb34abb4f4cb4c8", // Need to update for production
+              "45bde3ca927c41a8899f3a0c9d037521548c7aa7da6d48af5b",
             subscription_id: subscriptionID,
             plan_id: planID,
             prorate: "true",
