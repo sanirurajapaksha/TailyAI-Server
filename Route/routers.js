@@ -341,10 +341,15 @@ router.post("/api/v1/extension-data", async (req, res) => {
     const snapshot = db.collection("users").doc(cache.get(req.body.email));
     const doc = await snapshot.get();
 
-    if (doc.exists) {
+    if (doc.exists && doc.data().subscription_plan_id !== null) {
       res.send({
         generations: doc.data().generations,
         available_genarations: doc.data().available_genarations,
+      });
+    } else if (doc.exists && doc.data().subscription_plan_id === null) {
+      res.send({
+        generations: doc.data().free_generations,
+        available_genarations: doc.data().free_available_generations,
       });
     }
   } catch (error) {
