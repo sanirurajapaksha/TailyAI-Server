@@ -346,15 +346,19 @@ router.post("/api/v1/extension-data", async (req, res) => {
       (doc.data().subscription_plan_id !== null ||
         doc.data().subscription_plan_id !== undefined)
     ) {
+      // res.send({
+      //   generations: doc.data().generations,
+      //   available_genarations: doc.data().available_genarations,
+      // });
       res.send({
-        generations: doc.data().generations,
-        available_genarations: doc.data().available_genarations,
-      });
-    } else {
-      res.json({
         generations: doc.data().free_generations,
         available_genarations: doc.data().free_available_generations,
       });
+    } else {
+      // res.send({
+      //   generations: doc.data().free_generations,
+      //   available_genarations: doc.data().free_available_generations,
+      // });
     }
   } catch (error) {
     console.log("" + error);
