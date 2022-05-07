@@ -351,7 +351,7 @@ router.post("/api/v1/extension-data", async (req, res) => {
         available_genarations: doc.data().available_genarations,
       });
     } else {
-      res.send({
+      res.json({
         generations: doc.data().free_generations,
         available_genarations: doc.data().free_available_generations,
       });
