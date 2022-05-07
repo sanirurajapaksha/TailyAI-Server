@@ -346,7 +346,7 @@ router.post("/api/v1/extension-data", async (req, res) => {
         generations: doc.data().generations,
         available_genarations: doc.data().available_genarations,
       });
-    } else if (doc.exists && doc.data().subscription_plan_id === null) {
+    } else if (doc.exists && doc.data().plan_name === "Free") {
       res.send({
         generations: doc.data().free_generations,
         available_genarations: doc.data().free_available_generations,
