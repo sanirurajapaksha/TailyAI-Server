@@ -341,12 +341,20 @@ router.post("/api/v1/extension-data", async (req, res) => {
     const snapshot = db.collection("users").doc(cache.get(req.body.email));
     const doc = await snapshot.get();
 
-    if (doc.exists && doc.data().subscription_plan_id !== null) {
+    if (
+      doc.exists &&
+      (doc.data().subscription_plan_id !== null ||
+        doc.data().subscription_plan_id !== undefined)
+    ) {
       res.send({
         generations: doc.data().generations,
         available_genarations: doc.data().available_genarations,
       });
-    } else if (doc.exists && doc.data().subscription_plan_id === null) {
+    } else if (
+      doc.exists &&
+      (doc.data().subscription_plan_id === null ||
+        doc.data().subscription_plan_id === undefined)
+    ) {
       res.send({
         generations: doc.data().free_generations,
         available_genarations: doc.data().free_available_generations,
