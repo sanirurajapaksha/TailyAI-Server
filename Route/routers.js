@@ -48,6 +48,7 @@ router.post("/api/v1/openai", async (req, res) => {
         top_p: 1,
         frequency_penalty: 0,
         presence_penalty: 0,
+        user: req.body.email,
       });
       return main_response;
     };
