@@ -63,22 +63,7 @@ router.post("/api/v1/openai", async (req, res) => {
       if (
         doc.exists &&
         doc.data().email === req.body.email &&
-        doc.data().subscription_plan_id !== null
-      ) {
-        if (doc.data().generations === doc.data().available_genarations) {
-          res.send("limit_reached");
-        } else {
-          await snapshot
-            .set({ generations: doc.data().generations + 1 }, { merge: true })
-            .catch((error) => {
-              console.log(error);
-            });
-          res.send((await getMainResponse()).data.choices[0].text);
-        }
-      } else if (
-        doc.exists &&
-        doc.data().email === req.body.email &&
-        doc.data().subscription_plan_id === null
+        doc.data().plan_name === "Free"
       ) {
         if (
           doc.data().free_generations === doc.data().free_available_genarations
@@ -92,6 +77,21 @@ router.post("/api/v1/openai", async (req, res) => {
               },
               { merge: true }
             )
+            .catch((error) => {
+              console.log(error);
+            });
+          res.send((await getMainResponse()).data.choices[0].text);
+        }
+      } else if (
+        doc.exists &&
+        doc.data().email === req.body.email &&
+        doc.data().subscription_plan_id !== null
+      ) {
+        if (doc.data().generations === doc.data().available_genarations) {
+          res.send("limit_reached");
+        } else {
+          await snapshot
+            .set({ generations: doc.data().generations + 1 }, { merge: true })
             .catch((error) => {
               console.log(error);
             });
