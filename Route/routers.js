@@ -24,7 +24,7 @@ router.post("/api/v1/openai", async (req, res) => {
     const snapshot = db.collection("users").doc(cache.get(req.body.email));
     const doc = await snapshot.get();
 
-    const prompt = `Turn the given points into a meaningful, polite and formal email.\n\nGiven points: ${data}\nGenerated Email:`;
+    const prompt = `Turn the given points into a meaningful, formal and senders point of view email.\n\nGiven points: ${data}\nGenerated Email:`;
 
     const getTheFilterResponse = async () => {
       const filter_response = await openai.createCompletion(
