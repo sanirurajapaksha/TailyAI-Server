@@ -66,7 +66,7 @@ router.post("/api/v1/openai", async (req, res) => {
         doc.data().plan_name === "Free"
       ) {
         if (
-          doc.data().free_generations === doc.data().free_available_genarations
+          doc.data().free_generations === doc.data().free_available_generations
         ) {
           res.send("limit_reached");
         } else {
