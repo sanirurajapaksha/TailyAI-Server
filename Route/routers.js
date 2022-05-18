@@ -24,7 +24,7 @@ router.post("/api/v1/openai", async (req, res) => {
     const snapshot = db.collection("users").doc(cache.get(req.body.email));
     const doc = await snapshot.get();
 
-    const prompt = `Turn the given points into a meaningful, formal and senders point of view email.\n\nGiven points: ${data}\nGenerated Email:`;
+    const prompt = `Turn the given points into a meaningful, formal, and sender's point of view email.\n\nGiven points: ${data}\nGenerated Email:`;
 
     const getTheFilterResponse = async () => {
       const filter_response = await openai.createCompletion(
@@ -41,7 +41,7 @@ router.post("/api/v1/openai", async (req, res) => {
     };
 
     const getMainResponse = async () => {
-      const main_response = await openai.createCompletion("text-davinci-002", {
+      const main_response = await openai.createCompletion("text-curie-001", {
         prompt: prompt,
         temperature: 1,
         max_tokens: 250,
@@ -141,12 +141,12 @@ router.post("/api/v1/paddle/webhooks", async (req, res) => {
             user_id: req.body.user_id,
           };
           await snapshot.set(new_data, { merge: true });
-          console.log("Data updated for subscription_created");
+          console.log("subscription_created");
         } else {
-          console.log("Email does not match for subscription_created");
+          console.log("Email does not match - subscription_created");
         }
       } else {
-        console.log("Document does not exist for subscription_created");
+        console.log("Document does not exist - subscription_created");
       }
     }
 
@@ -169,13 +169,11 @@ router.post("/api/v1/paddle/webhooks", async (req, res) => {
 
           switch (req.body.subscription_plan_id) {
             case "762199":
-              available_genarations = 100;
+              available_genarations = 200;
               break;
             case "769448":
-              available_genarations = 300;
+              available_genarations = 1000;
               break;
-            case "769449": // These should be changed in production
-              available_genarations = 500;
           }
 
           const new_data = {
@@ -196,7 +194,7 @@ router.post("/api/v1/paddle/webhooks", async (req, res) => {
             p_signature: req.body.p_signature,
           };
           await snapshot.set(new_data, { merge: true });
-          console.log("Data updated for subscription_payment_succeeded");
+          console.log("subscription_payment_succeeded");
         } else {
           console.log("Emails do not match - subscription_payment_succeeded");
         }
@@ -224,7 +222,7 @@ router.post("/api/v1/paddle/webhooks", async (req, res) => {
             paused_reason: req.body.paused_reason,
           };
           await snapshot.set(new_data, { merge: true });
-          console.log("Data updated");
+          console.log("subscription_updated");
         } else {
           console.log("Emails do not match - subscription_updated");
         }
@@ -241,7 +239,7 @@ router.post("/api/v1/paddle/webhooks", async (req, res) => {
             free_available_generations: doc.data().free_available_generations,
           };
           await snapshot.set(new_data);
-          console.log("Subscription cancelled and updated");
+          console.log("Subscription cancelled");
         } else {
           console.log("Emails do not match - subscription_cancelled");
         }
@@ -257,9 +255,9 @@ router.post("/api/v1/paddle/webhooks", async (req, res) => {
             attempt_number: req.body.attempt_number,
           };
           await snapshot.set(new_data, { merge: true });
-          console.log("Both emails matches - payment created");
+          console.log("subscription_payment_failed");
         } else {
-          console.log("Emails do not match - payment created");
+          console.log("Emails do not match - subscription_payment_failed");
         }
       }
     }
@@ -328,14 +326,6 @@ router.post("/api/v1/firebase/auth", async (req, res) => {
   }
 });
 
-router.get("/", async (req, res) => {
-  try {
-    res.send("hello saniru");
-  } catch (error) {
-    console.log("" + error);
-  }
-});
-
 router.post("/api/v1/extension-data", async (req, res) => {
   try {
     const snapshot = db.collection("users").doc(cache.get(req.body.email));
@@ -352,6 +342,14 @@ router.post("/api/v1/extension-data", async (req, res) => {
         available_genarations: doc.data().available_genarations,
       });
     }
+  } catch (error) {
+    console.log("" + error);
+  }
+});
+
+router.get("/", async (req, res) => {
+  try {
+    res.send("hello saniru");
   } catch (error) {
     console.log("" + error);
   }
