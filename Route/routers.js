@@ -24,7 +24,7 @@ router.post("/api/v1/openai", async (req, res) => {
     const snapshot = db.collection("users").doc(cache.get(req.body.email));
     const doc = await snapshot.get();
 
-    const prompt = `Write an email from the sender's point of view by using the given points. Do not add any new points other than the given points.\n\nGiven points: ${data}\nGenerated Email:`;
+    const prompt = `Write a convincing and substantially long email that fits any use case from the sender's point of view by using the given points.\n\nGiven points: ${data}\nGenerated Email:`;
 
     const getTheFilterResponse = async () => {
       const filter_response = await openai.createCompletion(
