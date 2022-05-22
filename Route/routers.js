@@ -21,7 +21,13 @@ const openai = new OpenAIApi(configuration);
 router.post("/api/v1/openai", async (req, res) => {
   try {
     const data = req.body.text;
-    const snapshot = db.collection("users").doc(cache.get(req.body.email));
+
+    // Get the user's auth_id from the database
+    const snapshot_for_auth_id = db.collection("auth_id").doc(req.body.email);
+    const doc_for_auth_id = await snapshot_for_auth_id.get();
+
+    // Get the user's data from the database using the auth_id
+    const snapshot = db.collection("users").doc(doc_for_auth_id.data().auth_id);
     const doc = await snapshot.get();
 
     const prompt = `Write a convincing and substantially long email that fits any use case from the sender's point of view by using the given points.\n\nGiven points: ${data}\nGenerated Email:`;
@@ -129,7 +135,12 @@ router.post("/api/v1/paddle/webhooks", async (req, res) => {
       });
     }
 
-    const snapshot = db.collection("users").doc(cache.get(req.body.email));
+    // Get the user's auth_id from the database
+    const snapshot_for_auth_id = db.collection("auth_id").doc(req.body.email);
+    const doc_for_auth_id = await snapshot_for_auth_id.get();
+
+    // Get the user's data from the database using the auth_id
+    const snapshot = db.collection("users").doc(doc_for_auth_id.data().auth_id);
     const doc = await snapshot.get();
 
     if (req.body.alert_name === "subscription_created") {
@@ -268,7 +279,12 @@ router.post("/api/v1/paddle/webhooks", async (req, res) => {
 
 router.post("/api/v1/update/user", async (req, res) => {
   try {
-    const snapshot = db.collection("users").doc(cache.get(req.body.email));
+    // Get the user's auth_id from the database
+    const snapshot_for_auth_id = db.collection("auth_id").doc(req.body.email);
+    const doc_for_auth_id = await snapshot_for_auth_id.get();
+
+    // Get the user's data from the database using the auth_id
+    const snapshot = db.collection("users").doc(doc_for_auth_id.data().auth_id);
     const doc = await snapshot.get();
 
     if (doc.exists) {
@@ -310,25 +326,30 @@ router.post("/api/v1/update/user", async (req, res) => {
   }
 });
 
-router.post("/api/v1/firebase/auth", async (req, res) => {
-  try {
-    res.status(200);
-    if (cache.get(req.body.email) !== null) {
-      console.log(
-        "auth_uid already set in cache: " + cache.get(req.body.email)
-      );
-    } else {
-      cache.put(req.body.email, req.body.uid);
-      console.log("auth_uid set: " + cache.get(req.body.email));
-    }
-  } catch (error) {
-    console.log("" + error);
-  }
-});
+// router.post("/api/v1/firebase/auth", async (req, res) => {
+//   try {
+//     res.status(200);
+//     if (cache.get(req.body.email) !== null) {
+//       console.log(
+//         "auth_uid already set in cache: " + cache.get(req.body.email)
+//       );
+//     } else {
+//       cache.put(req.body.email, req.body.uid);
+//       console.log("auth_uid set: " + cache.get(req.body.email));
+//     }
+//   } catch (error) {
+//     console.log("" + error);
+//   }
+// });
 
 router.post("/api/v1/extension-data", async (req, res) => {
   try {
-    const snapshot = db.collection("users").doc(cache.get(req.body.email));
+    // Get the user's auth_id from the database
+    const snapshot_for_auth_id = db.collection("auth_id").doc(req.body.email);
+    const doc_for_auth_id = await snapshot_for_auth_id.get();
+
+    // Get the user's data from the database using the auth_id
+    const snapshot = db.collection("users").doc(doc_for_auth_id.data().auth_id);
     const doc = await snapshot.get();
 
     if (doc.exists && doc.data().plan_name === "Free") {
