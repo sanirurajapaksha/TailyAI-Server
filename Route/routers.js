@@ -30,7 +30,13 @@ router.post("/api/v1/openai", async (req, res) => {
     const snapshot = db.collection("users").doc(doc_for_auth_id.data().auth_id);
     const doc = await snapshot.get();
 
-    const prompt = `Write a convincing and substantially long email that fits any use case from the sender's point of view by using the given points.\n\nGiven points: ${data}\nGenerated Email:`;
+    let prompt;
+
+    if (req.body.type === "reply") {
+      prompt = `Write a convincing and substantially long reply email that fits any use case from the sender's point of view by using the given points.\n\nGiven Points: ${data}\nGenerated Email:`;
+    } else {
+      prompt = `Write a convincing and substantially long email that fits any use case from the sender's point of view by using the given points.\n\nGiven Points: ${data}\nGenerated Email:`;
+    }
 
     const getTheFilterResponse = async () => {
       const filter_response = await openai.createCompletion(
@@ -204,6 +210,7 @@ router.post("/api/v1/paddle/webhooks", async (req, res) => {
             subscription_plan_id: req.body.subscription_plan_id,
             p_signature: req.body.p_signature,
           };
+
           await snapshot.set(new_data, { merge: true });
           console.log("subscription_payment_succeeded");
         } else {
@@ -325,22 +332,6 @@ router.post("/api/v1/update/user", async (req, res) => {
     console.log("" + error);
   }
 });
-
-// router.post("/api/v1/firebase/auth", async (req, res) => {
-//   try {
-//     res.status(200);
-//     if (cache.get(req.body.email) !== null) {
-//       console.log(
-//         "auth_uid already set in cache: " + cache.get(req.body.email)
-//       );
-//     } else {
-//       cache.put(req.body.email, req.body.uid);
-//       console.log("auth_uid set: " + cache.get(req.body.email));
-//     }
-//   } catch (error) {
-//     console.log("" + error);
-//   }
-// });
 
 router.post("/api/v1/extension-data", async (req, res) => {
   try {
