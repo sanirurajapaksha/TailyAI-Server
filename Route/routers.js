@@ -30,13 +30,7 @@ router.post("/api/v1/openai", async (req, res) => {
     const snapshot = db.collection("users").doc(doc_for_auth_id.data().auth_id);
     const doc = await snapshot.get();
 
-    let prompt;
-
-    if (req.body.type === "reply") {
-      prompt = `Write a convincing and substantially long reply email that fits any use case from the sender's point of view by using the given points.\n\nGiven Points: ${data}\nGenerated Email:`;
-    } else {
-      prompt = `Write a convincing and substantially long email that fits any use case from the sender's point of view by using the given points.\n\nGiven Points: ${data}\nGenerated Email:`;
-    }
+    const prompt = `Write a convincing and substantially long email that fits any use case from the sender's point of view by using the given points.\n\nGiven Points: ${data}\nGenerated Email:`;
 
     const getTheFilterResponse = async () => {
       const filter_response = await openai.createCompletion(
