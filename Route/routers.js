@@ -20,8 +20,7 @@ const openai = new OpenAIApi(configuration);
 
 router.post("/api/v1/openai", async (req, res) => {
   try {
-    const data = req.body.text;
-
+    console.log(req.body);
     // Get the user's auth_id from the database
     const snapshot_for_auth_id = db.collection("auth_id").doc(req.body.email);
     const doc_for_auth_id = await snapshot_for_auth_id.get();
@@ -30,7 +29,19 @@ router.post("/api/v1/openai", async (req, res) => {
     const snapshot = db.collection("users").doc(doc_for_auth_id.data().auth_id);
     const doc = await snapshot.get();
 
-    const prompt = `Write a convincing and substantially long email that fits any use case from the sender's point of view by using the given points.\n\nGiven Points: ${data}\nGenerated Email:`;
+    const email_type_received = req.body.email_type;
+
+    let prompt;
+
+    if (email_type_received == "Cold-Email") {
+      prompt = `Write a convincing, fully-fledged, long and intention focused cold email from the sender's point of view using the given summary of the expected cold email.\n\nIntention of Email: ${req.body.intention}\nSummary of the Email: ${req.body.summary}\nGenerated Email:`;
+    } else if (email_type_received == "Sales-Email") {
+      prompt = `Write a convincing, fully-fledged, long and sales focused marketing email that helps users to close more deals, from the sender's point of view using the given information.\n\nProduct/Service Name: ${req.body.name}\nProduct/Service Description: ${req.body.description}\nSummary of the Email: ${req.body.summary}\nGenerated Email:`;
+    } else if (email_type_received == "Reply-Email") {
+      prompt = `Write a short and sweet reply email from the sender's point of view using the given information.\n\nSummary of the received email: ${req.body.received_summary}\nSummary of the Reply Email: ${req.body.summary}\nGenerated Email:`;
+    } else if (email_type_received == "Custom-Email") {
+      prompt = `Write a convincing, fully-fledged, and long email that fits the given email type from the sender's point of view using the given information.\n\nEmail Type: ${req.body.custom_type}\nSummary of the Email: ${req.body.summary}\nGenerated Email:`;
+    }
 
     const getTheFilterResponse = async () => {
       const filter_response = await openai.createCompletion(
@@ -50,7 +61,7 @@ router.post("/api/v1/openai", async (req, res) => {
       const main_response = await openai.createCompletion("text-curie-001", {
         prompt: prompt,
         temperature: 1,
-        max_tokens: 250,
+        max_tokens: 400,
         top_p: 1,
         frequency_penalty: 0,
         presence_penalty: 0,
@@ -59,6 +70,7 @@ router.post("/api/v1/openai", async (req, res) => {
       return main_response;
     };
 
+    console.log(prompt);
     const toxic_threshold = -0.355;
     const content_filter_value = (await getTheFilterResponse()).data.choices[0]
       .text;
